@@ -6,7 +6,8 @@ const voiceLogService = VoiceLogService.getInstance();
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('誰啦')
-        .setDescription('查詢最近一次離開你所在語音頻道的人'),
+        .setDescription('查詢最近一次離開你所在語音頻道的人')
+        .setDefaultMemberPermissions(null), // 所有使用者都能使用
     
     async execute(interaction: ChatInputCommandInteraction) {
         try {

@@ -3,7 +3,8 @@ import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from '
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('info')
-        .setDescription('Get information about the bot'),
+        .setDescription('Get information about the bot')
+        .setDefaultMemberPermissions(null), // 所有使用者都能使用
     
     async execute(interaction: ChatInputCommandInteraction) {
         const embed = new EmbedBuilder()

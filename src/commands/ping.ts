@@ -3,7 +3,8 @@ import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Replies with Pong and shows bot latency!'),
+        .setDescription('Replies with Pong and shows bot latency!')
+        .setDefaultMemberPermissions(null), // 所有使用者都能使用
     
     async execute(interaction: ChatInputCommandInteraction) {
         const sent = await interaction.reply({ 

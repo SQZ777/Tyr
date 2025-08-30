@@ -11,6 +11,8 @@ A modern Discord bot built with Discord.js v14 and TypeScript, featuring slash c
 - ✅ **Auto-reload** - Development server with hot reload
 - ✅ **Error Handling** - Comprehensive error management
 - ✅ **Ready to Deploy** - Production-ready configuration
+- ✅ **Voice Activity Logging** - MongoDB-powered voice channel tracking
+- ✅ **Database Integration** - Mongoose ODM with MongoDB support
 
 ## 📋 Prerequisites
 
@@ -54,15 +56,21 @@ Tyr/
 │   │   ├── apexmap.ts     # Apex Legends map rotation command
 │   │   ├── hello.ts       # Hello command with optional name
 │   │   ├── info.ts        # Bot information embed
-│   │   └── ping.ts        # Latency check command
+│   │   ├── ping.ts        # Latency check command
+│   │   └── whoLeft.ts     # Voice channel "who left" command
 │   ├── events/            # Discord event handlers
 │   │   ├── ready.ts       # Bot ready event
-│   │   └── guildCreate.ts # New server joined event
+│   │   ├── guildCreate.ts # New server joined event
+│   │   └── voiceStateUpdate.ts # Voice state change logging
+│   ├── models/            # Database models
+│   │   └── VoiceLog.ts    # Voice activity log model
 │   ├── types/             # TypeScript definitions
 │   │   └── Command.ts     # Command interface
 │   ├── utils/             # Utility functions
 │   │   ├── apexService.ts # Apex Legends API service
-│   │   └── deploy-commands.ts # Command deployment script
+│   │   ├── database.ts    # MongoDB connection service
+│   │   ├── deploy-commands.ts # Command deployment script
+│   │   └── voiceLogService.ts # Voice logging service
 │   └── index.ts           # Main bot file
 ├── .env.example           # Environment template
 ├── .gitignore            # Git ignore rules
@@ -80,6 +88,7 @@ Tyr/
 | `/info` | Display bot information | `/info` |
 | `/hello` | Greet user with optional name | `/hello [name]` |
 | `/apexmap` | Get Apex Legends map rotation (Normal/Ranked) | `/apexmap mode:normal/ranked` |
+| `/誰啦` | Find who last left your voice channel | `/誰啦` |
 
 ## 📜 Available Scripts
 

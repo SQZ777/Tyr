@@ -3,9 +3,14 @@ import { config } from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 import { Command } from './types/Command';
+import { DatabaseService } from './utils/database';
 
 // Load environment variables
 config();
+
+// Initialize database connection
+const dbService = DatabaseService.getInstance();
+dbService.connect();
 
 // Create a new client instance
 const client = new Client({
@@ -13,6 +18,7 @@ const client = new Client({
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMessages,
         GatewayIntentBits.MessageContent,
+        GatewayIntentBits.GuildVoiceStates,
     ],
 });
 
@@ -103,6 +109,19 @@ process.on('unhandledRejection', error => {
 process.on('uncaughtException', error => {
     console.error('Uncaught exception:', error);
     process.exit(1);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Received SIGINT, shutting down gracefully...');
+    await dbService.disconnect();
+    process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+    console.log('Received SIGTERM, shutting down gracefully...');
+    await dbService.disconnect();
+    process.exit(0);
 });
 
 // Login to Discord

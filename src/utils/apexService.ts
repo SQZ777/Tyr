@@ -3,11 +3,11 @@ import axios from 'axios';
 // Apex Legends 地圖名稱映射
 const MAPS: { [key: string]: string } = {
     'World\'s Edge': '世界邊緣',
-    'Kings Canyon': '國王峽谷',
+    'Kings Canyon': '王者峽谷 黃雀峽谷',
     'Olympus': '奧林匹斯',
-    'Storm Point': '風暴點',
-    'Broken Moon': '破碎之月',
-    'E-District': 'E區',
+    'Storm Point': '風暴點 P眼點',
+    'Broken Moon': '殘月',
+    'E-District': '電流區',
     'Habitat': '棲息地',
     'Caustic Treatment': '腐蝕處理廠',
     'Zeus Station': '宙斯站',

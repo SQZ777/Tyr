@@ -54,6 +54,21 @@
 - [ ] Add `APEX_STATUS_API_KEY=your_api_key_here` to your `.env` file
 - [ ] This enables the `/apexmap` command for map rotation info
 
+### 7. MongoDB Setup (Optional)
+- [ ] Set up MongoDB (local installation or MongoDB Atlas)
+- [ ] Create a database named `tyr-bot` 
+- [ ] Add `MONGODB_URI=your_mongodb_connection_string` to your `.env` file
+- [ ] This enables voice activity logging and the `/誰啦` command
+- [ ] **Local MongoDB**: `mongodb://localhost:27017/tyr-bot`
+- [ ] **MongoDB Atlas**: `mongodb+srv://username:password@cluster.mongodb.net/tyr-bot`
+
+### 8. Bot Permissions Update
+- [ ] Return to Discord Developer Portal > Your Application > Bot
+- [ ] Update bot permissions to include:
+  - [ ] **Connect** (for voice channel access)
+  - [ ] **View Channels** in voice categories
+- [ ] Re-invite bot with updated permissions if needed
+
 ## Quick Start Commands
 
 Once prerequisites are complete:

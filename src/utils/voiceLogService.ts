@@ -83,7 +83,7 @@ export class VoiceLogService {
             };
 
             await VoiceLog.create(logData);
-            console.log(`📝 Voice log saved: ${user.username} ${action} ${newChannel?.name || oldChannel?.name}`);
+            console.log(`${new Date()} 📝 Voice log saved: ${user.username} ${action} ${newChannel?.name || oldChannel?.name}`);
 
         } catch (error) {
             console.error('❌ Error saving voice log:', error);

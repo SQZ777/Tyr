@@ -132,14 +132,38 @@ export class ApexService {
         const gameModeText = gameMode === 'normal' ? '一般遊戲' : '排位遊戲';
         const gameModeEmoji = gameMode === 'normal' ? '🎮' : '🏆';
 
+        // 將 UTC 時間轉換為 UTC+8 (台灣時間)
+        const formatToTaiwanTime = (utcTimeString: string): string => {
+            try {
+                const utcDate = new Date(utcTimeString);
+                // 轉換為台灣時間 (UTC+8)
+                const taiwanTime = new Date(utcDate.getTime() + (8 * 60 * 60 * 1000));
+                return taiwanTime.toLocaleString('zh-TW', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    timeZone: 'Asia/Taipei'
+                });
+            } catch (error) {
+                console.warn('時間轉換錯誤:', error);
+                return utcTimeString; // 如果轉換失敗，返回原始時間
+            }
+        };
+
+        const currentStartTime = formatToTaiwanTime(currentMap.readableDate_start);
+        const currentEndTime = formatToTaiwanTime(currentMap.readableDate_end);
+        const nextStartTime = formatToTaiwanTime(nextMap.readableDate_start);
+
         return `${gameModeEmoji} **Apex Legends ${gameModeText} 地圖輪換**\n\n` +
                `📍 **目前地圖**: ${currentMapName}\n` +
                `⏱️ **剩餘時間**: ${currentMap.remainingTimer || '計算中...'}\n` +
                `⏳ **持續時間**: ${currentMap.DurationInMinutes} 分鐘\n` +
-               `🕐 **開始時間**: ${currentMap.readableDate_start}\n` +
-               `🕐 **結束時間**: ${currentMap.readableDate_end}\n\n` +
+               `🕐 **開始時間**: ${currentStartTime} (台灣時間)\n` +
+               `🕐 **結束時間**: ${currentEndTime} (台灣時間)\n\n` +
                `🔄 **下一張地圖**: ${nextMapName}\n` +
-               `⏰ **切換時間**: ${nextMap.readableDate_start}\n` +
+               `⏰ **切換時間**: ${nextStartTime} (台灣時間)\n` +
                `⏳ **下張持續**: ${nextMap.DurationInMinutes} 分鐘`;
     }
 

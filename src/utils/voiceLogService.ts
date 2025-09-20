@@ -18,13 +18,26 @@ export class VoiceLogService {
     }
 
     /**
+     * 確保資料庫連接並執行操作
+     */
+    private async ensureDatabaseConnection(): Promise<boolean> {
+        if (this.dbService.isConnectedToDatabase()) {
+            return true;
+        }
+
+        console.log('⚠️ Database connection lost, attempting to reconnect...');
+        return await this.dbService.ensureConnection();
+    }
+
+    /**
      * 記錄使用者語音頻道狀態變化
      */
     public async logVoiceStateUpdate(oldState: VoiceState, newState: VoiceState): Promise<void> {
         try {
-            // 檢查資料庫連接
-            if (!this.dbService.isConnectedToDatabase()) {
-                console.log('⚠️ Database not connected, skipping voice log');
+            // 確保資料庫連接
+            const isConnected = await this.ensureDatabaseConnection();
+            if (!isConnected) {
+                console.log('⚠️ Database not available, skipping voice log');
                 return;
             }
 
@@ -74,6 +87,11 @@ export class VoiceLogService {
 
         } catch (error) {
             console.error('❌ Error saving voice log:', error);
+            
+            // 如果是連接錯誤，記錄更詳細的資訊
+            if (error instanceof Error && error.message.includes('connection')) {
+                console.log('🔍 Database connection info:', this.dbService.getConnectionInfo());
+            }
         }
     }
 
@@ -82,7 +100,9 @@ export class VoiceLogService {
      */
     public async getLastUserLeftChannel(channelId: string, guildId: string): Promise<IVoiceLog | null> {
         try {
-            if (!this.dbService.isConnectedToDatabase()) {
+            const isConnected = await this.ensureDatabaseConnection();
+            if (!isConnected) {
+                console.log('⚠️ Database not available for query');
                 return null;
             }
 
@@ -110,7 +130,8 @@ export class VoiceLogService {
      */
     public async getUserVoiceHistory(userId: string, guildId: string, limit: number = 10): Promise<IVoiceLog[]> {
         try {
-            if (!this.dbService.isConnectedToDatabase()) {
+            const isConnected = await this.ensureDatabaseConnection();
+            if (!isConnected) {
                 return [];
             }
 
@@ -135,7 +156,8 @@ export class VoiceLogService {
      */
     public async getChannelVoiceHistory(channelId: string, guildId: string, limit: number = 20): Promise<IVoiceLog[]> {
         try {
-            if (!this.dbService.isConnectedToDatabase()) {
+            const isConnected = await this.ensureDatabaseConnection();
+            if (!isConnected) {
                 return [];
             }
 

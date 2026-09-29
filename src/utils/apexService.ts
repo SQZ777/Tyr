@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { time, TimestampStyles } from 'discord.js';
 
 // Apex Legends 地圖名稱映射
 const MAPS: { [key: string]: string } = {
@@ -132,38 +133,18 @@ export class ApexService {
         const gameModeText = gameMode === 'normal' ? '一般遊戲' : '排位遊戲';
         const gameModeEmoji = gameMode === 'normal' ? '🎮' : '🏆';
 
-        // 將 UTC 時間轉換為 UTC+8 (台灣時間)
-        const formatToTaiwanTime = (utcTimeString: string): string => {
-            try {
-                const utcDate = new Date(utcTimeString);
-                // 轉換為台灣時間 (UTC+8)
-                const taiwanTime = new Date(utcDate.getTime() + (8 * 60 * 60 * 1000));
-                return taiwanTime.toLocaleString('zh-TW', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    timeZone: 'Asia/Taipei'
-                });
-            } catch (error) {
-                console.warn('時間轉換錯誤:', error);
-                return utcTimeString; // 如果轉換失敗，返回原始時間
-            }
-        };
-
-        const currentStartTime = formatToTaiwanTime(currentMap.readableDate_start);
-        const currentEndTime = formatToTaiwanTime(currentMap.readableDate_end);
-        const nextStartTime = formatToTaiwanTime(nextMap.readableDate_start);
+        // 使用 Discord 時間戳記，讓每位使用者看到自己時區的時間
+        const localTime = (unixSecs: number) => time(unixSecs, TimestampStyles.ShortDateTime);
+        const relativeTime = (unixSecs: number) => time(unixSecs, TimestampStyles.RelativeTime);
 
         return `${gameModeEmoji} **Apex Legends ${gameModeText} 地圖輪換**\n\n` +
                `📍 **目前地圖**: ${currentMapName}\n` +
-               `⏱️ **剩餘時間**: ${currentMap.remainingTimer || '計算中...'}\n` +
+               `⏱️ **剩餘時間**: ${relativeTime(currentMap.end)} 結束\n` +
                `⏳ **持續時間**: ${currentMap.DurationInMinutes} 分鐘\n` +
-               `🕐 **開始時間**: ${currentStartTime} (台灣時間)\n` +
-               `🕐 **結束時間**: ${currentEndTime} (台灣時間)\n\n` +
+               `🕐 **開始時間**: ${localTime(currentMap.start)}\n` +
+               `🕐 **結束時間**: ${localTime(currentMap.end)}\n\n` +
                `🔄 **下一張地圖**: ${nextMapName}\n` +
-               `⏰ **切換時間**: ${nextStartTime} (台灣時間)\n` +
+               `⏰ **切換時間**: ${localTime(nextMap.start)} (${relativeTime(nextMap.start)})\n` +
                `⏳ **下張持續**: ${nextMap.DurationInMinutes} 分鐘`;
     }
 
